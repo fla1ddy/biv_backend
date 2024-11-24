@@ -1,25 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer</title>
+    <title>Просмотр изображений</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/3.1.0/openseadragon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            height: 100vh;
+            overflow: hidden;
         }
         #openseadragon {
             width: 100vw;
             height: 100vh;
         }
+        .openseadragon-container {
+            border-radius: 8px;
+        }
+        .custom-button {
+            background-color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-right: 10px;
+            z-index: 1001;
+        }
+        .custom-button:hover {
+            background-color: #e6e6e6;
+            transform: scale(1.05);
+        }
+        .custom-button:active {
+            background-color: #cccccc;
+            transform: scale(0.95);
+        }
+        #custom-controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
     <div id="openseadragon"></div>
+    <div id="custom-controls">
+        <button id="zoom-in-button" class="custom-button">Увеличить</button>
+        <button id="zoom-out-button" class="custom-button">Уменьшить</button>
+        <button id="home-button" class="custom-button">Сбросить</button>
+        <button id="full-page-button" class="custom-button">Полный экран</button>
+        <a href='/'><button class="custom-button">Домой</button></a>
+    </div>
     <script>
-        OpenSeadragon({
+        var viewer = OpenSeadragon({
             id: "openseadragon",
             prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/3.1.0/images/",
             tileSources: {
@@ -35,7 +75,36 @@
                     }
                 },
                 maxLevel: {{ max_zoom_level }}
-            }
+            },
+            showNavigator: true,
+            navigatorAutoFade: false,
+            navigatorBackground: "rgba(255, 255, 255, 0.8)",
+            navigatorBorderColor: "#333",
+            showZoomControl: false,
+            showHomeControl: false,
+            showFullPageControl: false
+        });
+
+        // Add custom controls to the viewer
+        viewer.addControl('custom-controls', { anchor: OpenSeadragon.ControlAnchor.TOP_LEFT });
+
+        // Bind buttons to viewer actions
+        document.getElementById('zoom-in-button').addEventListener('click', function() {
+            viewer.viewport.zoomBy(1.2);
+            viewer.viewport.applyConstraints();
+        });
+
+        document.getElementById('zoom-out-button').addEventListener('click', function() {
+            viewer.viewport.zoomBy(0.8);
+            viewer.viewport.applyConstraints();
+        });
+
+        document.getElementById('home-button').addEventListener('click', function() {
+            viewer.viewport.goHome();
+        });
+
+        document.getElementById('full-page-button').addEventListener('click', function() {
+            viewer.setFullScreen(!viewer.isFullPage());
         });
     </script>
 </body>

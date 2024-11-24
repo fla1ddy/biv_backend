@@ -1,5 +1,6 @@
 from django.db import models
 
+# Создание модели для загруженного изобоажения
 class UploadedImage(models.Model):
     image = models.ImageField(upload_to='images/')
     upload_time = models.DateTimeField(auto_now_add=True)

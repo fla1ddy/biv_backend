@@ -1,9 +1,9 @@
-from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import path, include
 
 urlpatterns = [
-    path('', include('tile_manager.urls')),
+    path('', include('tile_manager.urls')),  # Routes to tile_manager
 ]
 
 if settings.DEBUG:
